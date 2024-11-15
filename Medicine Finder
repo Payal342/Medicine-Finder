@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Styling */
+    * {
+      margin: 0;
+      padding: 0;
+      text-decoration: none;
+    }
+
+    .search-bar > button {
+      align-self: flex-end;
+      background: #fcba03;
+      padding: 5px 20px;
+      border: none;
+      border-radius: 50px;
+    }
+
+    .search-bar > input {
+      border: 1px solid white;
+      border-radius: 50px;
+      background: #00674f;
+      padding: 10px 15px;
+    }
+
+    label, a {
+      color: #ededed;
+    }
+
+    .search-bar {
+      display: flex;
+      flex-direction: column;
+      margin-top: 50px;
+      padding: 0 25px;
+      gap: 5px;
+    }
+
+    #countainer {
+      background: #00674f;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    #header {
+      background: #0aa15a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 5px;
+    }
+
+    #main-area {
+      display: none;
+      min-height: 80%;
+      padding: 4℅ 1%;
+      border: none;
+      border-radius: 20px;
+      background: #ededed;
+      width: 100%;
+      position: relative;
+    }
+
+    .product-img, .alt-img{
+      width: 30%;
+      border-radius: 10px;
+    }
+
+    #alternative-products-container {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #productList, #alternative-products {
+      display: flex;
+      flex-direction:column;
+      align-items: center;
+      margin-top: 20px
+         width: 100%;
+    }
+
+    .p-detail, .alt-Pdetail {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .alt-heading {
+      display: inline-block;
+      
+      background: #255db8;
+      color: #fafcff;
+      border:none;
+      border-radius: 20px;
+      padding: 5px 10px;
+      margin-left: 10%;
+    }
+
+    .product, .alternative-product-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 5px;
+      border-radius: 5px;
+      display: flex;
+      gap: 10px;
+      width: 270px;
+      box-shadow: 2px 2px 2px #a8a7a2;
+    }
+
+    .not-found {
+      color: red;
+      font-weight: bold;
+      font-size: 30px;
+      margin: 20px 10px;
+    }
+
+    #footer-img {
+      width: 70px;
+      mix-blend-mode: multiply;
+      
+    }
+
+    #footer {
+  width: 100%;
+  color: white;
+  display: flex;
+  gap: 5px;
+  padding: 5px 10px;
+  margin-top: 90%;
+}
+    
+
+  #footer > div {
+    width: 60%;
+  }
+
+#footer p {
+  font-size: 10px;
+}
+  </style>
+</head>
+<body>
+<div id="countainer">
+  <div id="header">
+    <a>HOME</a>
+    <a>CONTACT US</a>
+  </div>
+
+  <div class="search-bar">
+    <label for="searchMedicine">Medicine Finder</label>
+    <input type="text" name="search-medicine" id="searchInput" oninput="handleInput()" />
+    <button onclick="showAlternativeProducts()">Find Alternative</button>
+  </div> 
+
+  <div id="main-area">
+    <div id="productList"></div>
+    <div id="alternative-products-container">
+      <h5 class="alt-heading">Best Alternatives</h5>
+      <div id="alternative-products"></div>
+    </div>
+  </div>
+
+
+  <div id="footer">
+    <div>
+    <h2>Good Morning Ritesh</h2>
+    <p>Lorem ipsum dolor sit amet. Id assumenda provident non Quis enim.</p>
+    </div>
+    <img src="https://pngimagesfree.com/wp-content/uploads/Pradhan-Mantri-Jan-Aushadhi-Logo-PNG.png" id="footer-img">
+  </div>
+</div>
+  
+<script>
+let products = [
+   {
+    id: 1,
+    name: "Paracetamol",
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+    price: "Rs.20" ,
+    manufacturer: "ABC PHARMA",    
+    href: "",  
+    alternatives: [{
+      name: "Crocin",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "GlaxoSmithKline"
+    },
+         {
+      name: "Dolo 650",
+       src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",    
+      price: "Rs. ", 
+      manufacturer: "Micro labs"
+    },
+      {
+      name: "Calpol",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",  
+      price: "Rs. ", 
+      manufacturer: "GSK"
+    }]
+  },
+
+  {
+    id: 2,
+    name: "Combiflam",
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+    price: "Rs.30", 
+    manufacturer: "Sanifa",        
+    href: "",  
+    alternatives: [{
+      name: "Ibuprofen",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "Abbott"
+    },
+        {
+      name: "Brufen",
+       src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",   
+      price: "Rs. ", 
+      manufacturer: "Abbott"
+    } ]
+  },
+
+  {
+    id: 3,
+    name: "Disprin",
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+     price: "Rs.20", manufacturer: "Reckitt Benckisir",        
+    href: "",
+    alternatives: [{
+      name: "Ecosprin",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "USV Ltd"
+    },
+        {
+      name: "Aspirin",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",    
+      price: "Rs. ", 
+      manufacturer: "Bayer"
+    },
+          {
+      name: "Aspro",
+       src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",     
+      price: "Rs. ", 
+      manufacturer: "Nicholas Healtcare Ltd"
+    } ]
+  },
+
+  {
+    id: 4,
+    name: "ORS",
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+    price: "Rs.25 per sachet" ,        href: "",  
+    alternatives: [{
+      name: "Electral",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "FDC Ltd"
+    },
+         {
+      name: "ORSL",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",     
+      price: "Rs. ", 
+      manufacturer: "Dabur"
+    },
+       {
+      name: "Peditral",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",   
+      price: "Rs. ", 
+      manufacturer: "Cipla"
+    }           ]
+  },
+
+  {
+    id: 5,
+    name: "Vicks Vaparob",
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+    price: "Rs.40 for 25g", manufacturer: "Procter & Gamblep",     alternatives: [{
+      name: "Zandu Balm",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "Emami"
+    },
+        {
+      name: "Amrutanjan",
+       src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",   
+      price: "Rs. ", 
+      manufacturer: "Amrutanjan Healthcare"
+    },
+        {
+      name: "Tiger Balm",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",    
+      price: "Rs. ", 
+      manufacturer: "Haw Par Healtcare"
+    } ]
+  },
+
+  {
+    id: 6 ,
+    name: "Digine",
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+    price: "Rs.40 for 10tbl",          manufacturer: "Abott", 
+    alternatives: [{
+      name: "Gelusil",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "Pfizer"
+    },
+          {
+      name: "ENO",
+        src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",    
+      price: "Rs. ", 
+      manufacturer: "GlaxoSmithKline"
+    },
+         {
+      name: "Digine",
+        src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",   
+      price: "Rs.80 for 200ml", 
+      manufacturer: "Abott"
+    }         ]
+  },
+
+  {
+    id: 7,
+    name: "Strepsils" ,
+    src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+    price: "Rs.40 for 10 tbl", manufacturer: "Reckitt Benckisir",
+    alternatives: [{
+      name: "Vicks",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "Procter & Gamble"
+    },
+         {
+      name: "Dabur Honitus",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",  
+      price: "Rs. ", 
+      manufacturer: "Dabur India Ltd"
+    },
+        {
+      name: "Cofsils",
+        src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",  
+      price: "Rs. ", 
+      manufacturer: "Cipla Healtcare"
+    }          ]
+ },           
+
+  {
+    id: 8,
+    name: "Benadryl" ,
+    src: "https://i.ibb.co/dbnM9tp/IMG-20241115-130835-256.jpg",
+    price: "Rs.80 for per 100ml", manufacturer: "Johnson & Johnson",
+    alternatives: [{
+      name: "Corex",
+      src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",
+      price: "Rs. ", 
+      manufacturer: "Pfizer"
+    },
+         {
+      name: "Ascoril-D",
+       src: "https://i.ibb.co/p03ZcBW/IMG-20241115-130834-799.jpg",   
+      price: "Rs. ", 
+      manufacturer: "Gzlenmark"
+    }         ]
+  }
+];
+
+// Handle input changes and toggle main-area visibility
+function handleInput() {
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const mainArea = document.getElementById("main-area");
+  const productList = document.getElementById("productList");
+
+  if (searchInput.trim() === "") {
+    mainArea.style.display = "none"; // Hide main-area if input is empty
+    productList.innerHTML = ""; // Clear the product list
+    return;
+  }
+
+  mainArea.style.display = "block"; // Show main-area if input is not empty
+  filterProducts(); // Call filterProducts to show results
+}
+
+function filterProducts() {
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const productList = document.getElementById("productList");
+  const alternativeContainer = document.getElementById('alternative-products-container');
+
+  productList.innerHTML = '';
+  alternativeContainer.style.display = 'none'; // Hide alternative section by default
+
+  // Find all products that include the search input in their name
+  const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchInput));
+
+  if (filteredProducts.length > 0) {
+    filteredProducts.forEach(product => {
+      const productDiv = document.createElement("div");
+      productDiv.classList.add("product");
+      productDiv.innerHTML = `
+      <img src = "${product.src}" class ="product-img">
+     <div class="p-detail">
+   <h4>Name: ${product.name}</h4> 
+
+    <p style="font-size: 12px">Mfd. By: ${product.manufacturer}</p>  
+                              <p style="font-size: 12px">Price: ${product.price}</p> 
+</div>`;
+      productList.appendChild(productDiv);
+    });
+  } else {
+    const notFoundMessage = document.createElement("div");
+    notFoundMessage.classList.add("not-found");
+    notFoundMessage.textContent = "Medicine Not Found";
+    productList.appendChild(notFoundMessage);
+  }
+}
+
+function showAlternativeProducts() {
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const alternativeProductsContainer = document.getElementById('alternative-products');
+  const alternativeContainer = document.getElementById('alternative-products-container');
+
+  alternativeProductsContainer.innerHTML = '';
+
+  // Find the product that exactly matches the search input
+  const product = products.find(p => p.name.toLowerCase() === searchInput);
+
+  if (product && product.alternatives) {
+    product.alternatives.forEach(alt => {
+      const altProductCard = document.createElement('div');
+      altProductCard.className = 'alternative-product-card';
+      altProductCard.innerHTML = `
+   <img src = "${alt.src}" class="alt-img">   
+  <div class="alt-Pdetail">
+  <h4>Name: ${alt.name}</h4>
+
+  <p style="font-size: 12px">Mfd. By: ${alt.manufacturer}</p>
+                                  <p style="font-size: 12px">Price: ${alt.price}</p>
+</div>`;
+      alternativeProductsContainer.appendChild(altProductCard);
+    });
+    alternativeContainer.style.display = 'block'; // Show alternatives if found
+  } else if (!product) {
+    alert("Product Not Found! Please enter a valid product name.");
+  }
+}
+      
+  
+</script>
+</body>
+</html>
